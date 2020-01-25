@@ -10,17 +10,15 @@
         <th>LOCATION</th>
     </tr>
     {% for character in characters %}
-        {% for value in character %}
-            <tr>
-                <td><img src="{{ value.image }}" /></td>
-                <td>{{ value.name }}</td>
-                <td>{{ value.status }}</td>
-                <td>{{ value.species }}</td>
-                <td>{{ value.type }}</td>
-                <td>{{ value.gender }}</td>
-                <td>{{ value.origin.name }}</td>
-                <td>{{ value.location.name }}</td>
-            </tr>
-        {% endfor %}
+        <tr>
+            <td><img src="{{ character.image }}" /></td>
+            <td>{{ character.name }}</td>
+            <td>{{ character.status }}</td>
+            <td>{{ character.species }}</td>
+            <td>{{ character.type }}</td>
+            <td>{{ character.gender }}</td>
+            <td>{{ character.origin.name }}</td>
+            <td>{{ character.location.name }}</td>
+        </tr>
     {% endfor %}
 </table>

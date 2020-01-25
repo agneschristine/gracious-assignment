@@ -2,7 +2,6 @@
 namespace App\Service;
 
 use Http\Message\RequestFactory;
-use Http\Message\StreamFactory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -32,27 +31,19 @@ class Client
     private $requestFactory;
 
     /**
-     * @var StreamFactory
-     */
-    private $streamFactory;
-
-    /**
      * Client constructor.
      * @param ClientInterface $httpClient
      * @param UriInterface $baseUri
      * @param RequestFactory $requestFactory
-     * @param StreamFactory $streamFactory
      */
     public function __construct(
         ClientInterface $httpClient,
         UriInterface $baseUri,
-        RequestFactory $requestFactory,
-        StreamFactory $streamFactory
+        RequestFactory $requestFactory
     ) {
         $this->httpClient = $httpClient;
         $this->baseUri = $baseUri;
         $this->requestFactory = $requestFactory;
-        $this->streamFactory = $streamFactory;
     }
 
     /**
@@ -175,7 +166,7 @@ class Client
         array $parameters = null
     ): RequestInterface {
         $uri = $this->makeUri($path);
-        if (isset($parameters)) {
+        if (! empty($parameters)) {
             $uri = $this->addParametersToUri($this->makeUri($path), $parameters);
         }
 

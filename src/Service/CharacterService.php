@@ -3,8 +3,6 @@ namespace App\Service;
 
 use App\Entity\Character;
 use App\Entity\Location;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\SerializerInterface;
 
 class CharacterService
@@ -65,13 +63,12 @@ class CharacterService
     }
 
     /**
+     * @param array $characterIds
      * @param array $uris
      * @return array
      */
-    private function getCharacterIds(array $uris): array
+    private function getCharacterIds(array $characterIds, array $uris): array
     {
-        $characterIds = [];
-
         foreach ($uris as $uri) {
             array_push($characterIds,preg_replace('/[^0-9]/', '', $uri));
         }
@@ -81,12 +78,10 @@ class CharacterService
 
     /**
      * @param array $parameters
-     * @return Collection
+     * @return array
      */
-    public function getCharactersByDimension(array $parameters = []): Collection
+    public function getCharactersByDimension(array $parameters = []): array
     {
-        $characters = new ArrayCollection();
-
         $locations = $this->locationService->getLocations([], $parameters);
         $residents = $locations->map(function(Location $location) {
             return $location->getResidents();
@@ -98,60 +93,59 @@ class CharacterService
                 break;
             }
 
-            $characterIds += $this->getCharacterIds($uris);
+            $characterIds = $this->getCharacterIds($characterIds, $uris);
         }
 
         if (! empty($characterIds)) {
-            $characters->add($this->getCharacters($characterIds, 'array<App\Entity\Character>'));
+            return $this->getCharacters($characterIds, 'array<App\Entity\Character>');
         }
 
-        return $characters;
+        return [];
     }
 
     /**
      * @param int $locationId
-     * @return Collection
+     * @return array
      */
-    public function getCharactersByLocation(int $locationId): Collection
+    public function getCharactersByLocation(int $locationId): array
     {
-        $characters = new ArrayCollection();
-
         $location = $this->locationService->getLocation([$locationId]);
         $residents = $location->getResidents();
 
+        $characterIds = [];
         if (! empty($residents)) {
-            $characterIds = $this->getCharacterIds($residents);
+            $characterIds = $this->getCharacterIds($characterIds, $residents);
             $type = Character::class;
             if (count($characterIds) > 1) {
                 $type = 'array<App\Entity\Character>';
             }
 
-            $characters->add($this->getCharacters($characterIds, $type));
+            return $this->getCharacters($characterIds, $type);
         }
-        return $characters;
+
+        return [];
     }
 
     /**
      * @param int $episodeId
-     * @return Collection
+     * @return array
      */
-    public function getCharactersByEpisode(int $episodeId): Collection
+    public function getCharactersByEpisode(int $episodeId): array
     {
-        $casts = new ArrayCollection();
-
         $episode = $this->episodeService->getEpisode($episodeId);
         $characters = $episode->getCharacters();
 
+        $characterIds = [];
         if (! empty($characters)) {
-            $characterIds = $this->getCharacterIds($characters);
+            $characterIds = $this->getCharacterIds($characterIds, $characters);
             $type = Character::class;
             if (count($characterIds) > 1) {
                 $type = 'array<App\Entity\Character>';
             }
 
-            $casts->add($this->getCharacters($characterIds, $type));
+            return $this->getCharacters($characterIds, $type);
         }
 
-        return $casts;
+        return [];
     }
 }
