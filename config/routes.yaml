@@ -1,0 +1,15 @@
+index:
+    path: /
+    controller: App\Controller\HomepageController::index
+
+display_character_by_dimension:
+    path: /display-character-by-dimension
+    controller: App\Controller\HomepageController::displayCharactersByDimension
+
+display_character_by_location:
+    path: /display-character-by-location
+    controller: App\Controller\HomepageController::displayCharactersByLocation
+
+display_character_by_episode:
+    path: /display-character-by-episode
+    controller: App\Controller\HomepageController::displayCharactersByEpisode

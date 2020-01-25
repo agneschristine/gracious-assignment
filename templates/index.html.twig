@@ -1,0 +1,35 @@
+<label for="dimension-select">Choose a dimension:</label>
+
+<form action="{{ path('display_character_by_dimension') }}">
+    <select name="dimension">
+        {% for dimension in dimensions %}
+            <option value="{{ dimension }}">{{ dimension }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <input type="submit">
+</form>
+
+<label for="location-select">Choose a location:</label>
+
+<form action="{{ path('display_character_by_location') }}">
+    <select name="location">
+        {% for location in locations %}
+            <option value="{{ location.id }}">{{ location.name }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <input type="submit">
+</form>
+
+<label for="episode-select">Choose an episode:</label>
+
+<form action="{{ path('display_character_by_episode') }}">
+    <select name="episode">
+        {% for episode in episodes %}
+            <option value="{{ episode.id }}">{{ episode.name }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <input type="submit">
+</form>
